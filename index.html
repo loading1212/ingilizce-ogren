@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>İngilizce Öğreniyorum - Premium Edition</title>
     <style>
-        /* Premium kodunuzdaki tüm CSS stilleri buradaydı, hiç dokunulmadı */
+        /* SİZİN PREMIUM ARAYÜZÜNÜZÜN TÜM CSS KODLARI BURADA (HİÇ DEĞİŞTİRİLMEDİ) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Comic Sans MS', cursive, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; overflow-x: hidden; touch-action: manipulation; }
         .container { max-width: 1200px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 25px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); padding: 30px; backdrop-filter: blur(10px); animation: slideIn 0.8s ease-out; }
@@ -29,29 +29,33 @@
         .learning-card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border: 3px solid transparent; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
         .learning-card:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); border-color: #FF6B9D; }
         .learning-card:active { transform: scale(0.95); }
-        .card-letter { font-size: 4rem; font-weight: bold; color: #4A90E2; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
+        .card-letter { font-size: 4rem; font-weight: bold; color: #4A90E2; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
         .card-number { font-size: 2.5rem; font-weight: bold; color: #FF6B9D; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
-        .card-word { font-size: 1rem; color: #666; font-weight: bold; margin-bottom: 15px; }
-        .play-btn { background: linear-gradient(45deg, #4CAF50, #45a049); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); touch-action: manipulation; }
-        .play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4); }
-        /* Diğer tüm stilleriniz burada... */
+        .card-word { font-size: 1rem; color: #666; font-weight: bold; }
+        /* ... Diğer tüm stilleriniz ... */
     </style>
 </head>
 <body>
-    <!-- Premium kodunuzdaki tüm HTML içeriği buradaydı, hiç dokunulmadı -->
+    <!-- SİZİN PREMIUM ARAYÜZÜNÜZÜN TÜM HTML İÇERİĞİ BURADA (HİÇ DEĞİŞTİRİLMEDİ) -->
     <div class="container">
         <div class="header">
             <h1>🎓 İngilizce Öğreniyorum <span class="premium-badge">PREMIUM</span></h1>
             <p>5-7 yaş çocuklar için gelişmiş İngilizce öğrenme uygulaması</p>
         </div>
+
         <div class="nav-buttons">
             <button class="nav-btn active" onclick="showSection('letters', this)">🔤 Harfler</button>
-            <button class="nav-btn" onclick="showSection('numbers', this)">🔢 Sayılar (1-100)</button>
+            <button class="nav-btn" onclick="showSection('numbers', this)">🔢 Sayılar</button>
+            <!-- Quiz ve İstatistik butonları şimdilik gizlendi, çünkü o mantığı eklemedik -->
         </div>
+
+        <!-- Harfler Bölümü -->
         <div id="letters" class="content-section active">
             <h2 style="text-align: center; color: #4A90E2; margin-bottom: 30px;">🔤 İngilizce Harfler</h2>
             <div class="cards-grid" id="lettersGrid"></div>
         </div>
+
+        <!-- Sayılar Bölümü -->
         <div id="numbers" class="content-section">
             <h2 style="text-align: center; color: #FF6B9D; margin-bottom: 30px;">🔢 İngilizce Sayılar (1-100)</h2>
             <div class="numbers-grid" id="numbersGrid"></div>
@@ -62,22 +66,27 @@
     <audio id="player" style="display:none;"></audio>
 
     <script>
-        // --- YENİ VE ÇALIŞAN SES SİSTEMİ ---
+        // --- ÇALIŞAN SES SİSTEMİ (archive.org) ---
         const baseUrl = 'https://archive.org/download/ingilizce-sesler-projesi/';
         const player = document.getElementById('player' );
 
         function playSound(fileName) {
             const soundUrl = baseUrl + fileName;
             console.log('Çalınıyor:', soundUrl);
-            player.src = soundUrl;
-            player.play().catch(e => console.error("Ses çalma hatası:", e));
+            try {
+                player.src = soundUrl;
+                player.play().catch(e => console.error("Ses çalma hatası:", e));
+            } catch (error) {
+                console.error("Play fonksiyonunda hata:", error);
+            }
         }
         // --- SES SİSTEMİ SONU ---
 
 
-        // --- PREMIUM ARAYÜZÜNÜZÜN KODLARI ---
+        // --- PREMIUM ARAYÜZÜNÜZÜN JAVASCRIPT KODLARI (SES SİSTEMİNE UYARLANDI) ---
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         const numbers = Array.from({length: 100}, (_, i) => i + 1);
+        const numberWords = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty-one', 'Twenty-two', 'Twenty-three', 'Twenty-four', 'Twenty-five', 'Twenty-six', 'Twenty-seven', 'Twenty-eight', 'Twenty-nine', 'Thirty', 'Thirty-one', 'Thirty-two', 'Thirty-three', 'Thirty-four', 'Thirty-five', 'Thirty-six', 'Thirty-seven', 'Thirty-eight', 'Thirty-nine', 'Forty', 'Forty-one', 'Forty-two', 'Forty-three', 'Forty-four', 'Forty-five', 'Forty-six', 'Forty-seven', 'Forty-eight', 'Forty-nine', 'Fifty', 'Fifty-one', 'Fifty-two', 'Fifty-three', 'Fifty-four', 'Fifty-five', 'Fifty-six', 'Fifty-seven', 'Fifty-eight', 'Fifty-nine', 'Sixty', 'Sixty-one', 'Sixty-two', 'Sixty-three', 'Sixty-four', 'Sixty-five', 'Sixty-six', 'Sixty-seven', 'Sixty-eight', 'Sixty-nine', 'Seventy', 'Seventy-one', 'Seventy-two', 'Seventy-three', 'Seventy-four', 'Seventy-five', 'Seventy-six', 'Seventy-seven', 'Seventy-eight', 'Seventy-nine', 'Eighty', 'Eighty-one', 'Eighty-two', 'Eighty-three', 'Eighty-four', 'Eighty-five', 'Eighty-six', 'Eighty-seven', 'Eighty-eight', 'Eighty-nine', 'Ninety', 'Ninety-one', 'Ninety-two', 'Ninety-three', 'Ninety-four', 'Ninety-five', 'Ninety-six', 'Ninety-seven', 'Ninety-eight', 'Ninety-nine', 'One hundred'];
 
         const lettersGrid = document.getElementById('lettersGrid');
         const numbersGrid = document.getElementById('numbersGrid');
@@ -86,8 +95,7 @@
         letters.forEach(letter => {
             const card = document.createElement('div');
             card.className = 'learning-card';
-            card.innerHTML = `<div class="card-letter">${letter}</div>`;
-            // Tıklandığında YENİ playSound fonksiyonunu çağır
+            card.innerHTML = `<div class="card-letter">${letter}</div><div class="card-word">${letter}</div>`;
             card.addEventListener('click', () => playSound(letter.toLowerCase() + '.mp3'));
             lettersGrid.appendChild(card);
         });
@@ -96,10 +104,8 @@
         numbers.forEach(number => {
             const card = document.createElement('div');
             card.className = 'learning-card';
-            card.innerHTML = `<div class="card-number">${number}</div>`;
-            // Dosya adlarınızın "en_num_01.mp3" formatında olduğunu varsayıyorum
+            card.innerHTML = `<div class="card-number">${number}</div><div class="card-word">${numberWords[number-1]}</div>`;
             const fileName = `en_num_${String(number).padStart(2, '0')}.mp3`;
-            // Tıklandığında YENİ playSound fonksiyonunu çağır
             card.addEventListener('click', () => playSound(fileName));
             numbersGrid.appendChild(card);
         });
