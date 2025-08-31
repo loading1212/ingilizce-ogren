@@ -1,146 +1,190 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>İngilizce Öğreniyorum</title>
+  <meta charset="UTF-8">
+  <title>English Learning</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; }
-    .learning-card { display:inline-block; margin:10px; padding:20px; border:1px solid #ccc; border-radius:10px; cursor:pointer; }
-    .learned { background:#d4edda; }
-    .celebration { font-size:2em; animation: pop 1s ease; }
-    @keyframes pop { 0%{transform:scale(0);} 50%{transform:scale(1.3);} 100%{transform:scale(1);} }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1, h2 { text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; margin: 20px 0; }
+    .learning-card { background: white; border: 2px solid #ddd; padding: 20px; text-align: center; cursor: pointer; border-radius: 10px; transition: transform 0.2s; }
+    .learning-card:hover { transform: scale(1.1); background: #f0f8ff; }
+    .learned { background: #c8e6c9 !important; }
+    #progress { text-align: center; font-weight: bold; margin: 20px 0; }
+    #quiz, #stats { margin-top: 30px; padding: 20px; background: #fff; border-radius: 10px; }
+    button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; background: #2196f3; color: white; }
+    button:hover { background: #1976d2; }
+    .celebration { font-size: 40px; text-align: center; animation: pop 1s; }
+    @keyframes pop { 0%{ transform:scale(0.5); opacity:0 } 100%{ transform:scale(1); opacity:1 } }
   </style>
 </head>
 <body>
-  <h1>📚 İngilizce Öğreniyorum</h1>
-  <div id="progress"></div>
-  <div id="letters"></div>
-  <div id="numbers"></div>
-  <script>let learnedLetters = new Set();
-    let learnedNumbers = new Set();
-    let totalQuizScore = 0;
-    let studyStartTime = Date.now();
+  <h1>📚 English Learning Game</h1>
 
-    function updateProgress() {
-        const letterCount = learnedLetters.size;
-        const numberCount = learnedNumbers.size;
-        document.getElementById("progress").innerHTML = `
-            Öğrenilen Harfler: ${letterCount}/26 <br>
-            Öğrenilen Sayılar: ${numberCount}/10 <br>
-            Toplam Quiz Puanı: ${totalQuizScore}
-        `;
-    }
+  <div id="progress">Progress: 0%</div>
 
-    function showCelebration(icon) {
-        const el = document.createElement("div");
-        el.className = "celebration";
-        el.textContent = icon;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1000);
-    }
+  <h2>🔤 Letters</h2>
+  <div class="grid" id="letters"></div>
 
-    // İlerlemeyi kaydet
-    function saveProgress() {
-        const data = {
-            learnedLetters: Array.from(learnedLetters),
-            learnedNumbers: Array.from(learnedNumbers),
-            totalQuizScore,
-            studyStartTime
-        };
-        localStorage.setItem("englishLearningProgress", JSON.stringify(data));
-        console.log("İlerleme kaydedildi:", data);
-    }
+  <h2>🔢 Numbers (1–100)</h2>
+  <div class="grid" id="numbers"></div>
 
-    // İlerlemeyi yükle
-    function loadProgress() {
-        const saved = localStorage.getItem("englishLearningProgress");
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                learnedLetters = new Set(data.learnedLetters || []);
-                learnedNumbers = new Set(data.learnedNumbers || []);
-                totalQuizScore = data.totalQuizScore || 0;
-                studyStartTime = data.studyStartTime || Date.now();
-                console.log("Kayıtlı ilerleme yüklendi:", data);
-            } catch (e) {
-                console.error("İlerleme yüklenemedi:", e);
-            }
+  <div id="quiz">
+    <h2>❓ Quiz</h2>
+    <p id="quiz-question">Press start to begin quiz.</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div id="quiz-options"></div>
+  </div>
+
+  <div id="stats">
+    <h2>📊 Statistics</h2>
+    <p id="stats-text">No data yet.</p>
+  </div>
+
+  <div id="celebration"></div>
+
+<script>
+  // === Ses sistemi (Archive.org) ===
+  const audioBase = "https://archive.org/download/ingilizce-sesler-projesi/";
+
+  function playAudio(fileName, callback) {
+    const audio = new Audio(audioBase + fileName);
+    audio.play()
+      .then(() => {
+        audio.onended = () => { if (callback) callback(); };
+      })
+      .catch(err => {
+        console.error("Ses çalma hatası:", err);
+        if (callback) callback();
+      });
+  }
+
+  function playLetter(letter) {
+    playAudio(letter + ".mp3", () => {
+      learnedLetters.add(letter);
+      updateProgress(); saveProgress();
+      const cards = document.querySelectorAll('.learning-card');
+      cards.forEach(card => {
+        if (card.querySelector('.card-letter')?.textContent === letter) {
+          card.classList.add('learned');
+          showCelebration('🎉');
         }
-        updateProgress();
-    }// --- Archive.org Ses Sistemi ---
-    const audioBase = "https://archive.org/download/ingilizce-sesler-projesi/";
+      });
+    });
+  }
 
-    function playAudio(fileName, callback) {
-        const audio = new Audio(audioBase + fileName);
-        audio.play()
-            .then(() => {
-                console.log("Ses çalınıyor:", fileName);
-                audio.onended = () => {
-                    if (callback) callback();
-                };
-            })
-            .catch(err => {
-                console.error("Ses çalma hatası:", err);
-                if (callback) callback();
-            });
+  function playNumber(number) {
+    playAudio(number + ".mp3", () => {
+      learnedNumbers.add(number);
+      updateProgress(); saveProgress();
+      const cards = document.querySelectorAll('.learning-card');
+      cards.forEach(card => {
+        if (card.querySelector('.card-number')?.textContent == number) {
+          card.classList.add('learned');
+          showCelebration('⭐');
+        }
+      });
+    });
+  }
+
+  // === İlerleme kaydı ===
+  let learnedLetters = new Set();
+  let learnedNumbers = new Set();
+
+  function saveProgress() {
+    localStorage.setItem("learnedLetters", JSON.stringify([...learnedLetters]));
+    localStorage.setItem("learnedNumbers", JSON.stringify([...learnedNumbers]));
+  }
+
+  function loadProgress() {
+    let l = JSON.parse(localStorage.getItem("learnedLetters")) || [];
+    let n = JSON.parse(localStorage.getItem("learnedNumbers")) || [];
+    learnedLetters = new Set(l);
+    learnedNumbers = new Set(n);
+  }
+
+  function updateProgress() {
+    const total = 26 + 100;
+    const done = learnedLetters.size + learnedNumbers.size;
+    let percent = Math.round((done / total) * 100);
+    document.getElementById("progress").textContent = `Progress: ${percent}%`;
+    document.getElementById("stats-text").textContent =
+      `Learned Letters: ${learnedLetters.size}/26, Numbers: ${learnedNumbers.size}/100`;
+  }
+
+  // === Kartları oluştur ===
+  function createCards() {
+    const lettersDiv = document.getElementById("letters");
+    for (let i = 65; i <= 90; i++) {
+      const letter = String.fromCharCode(i);
+      const card = document.createElement("div");
+      card.className = "learning-card";
+      if (learnedLetters.has(letter)) card.classList.add("learned");
+      card.innerHTML = `<div class="card-letter">${letter}</div>`;
+      card.onclick = () => playLetter(letter);
+      lettersDiv.appendChild(card);
     }
 
-    function playLetter(letter) {
-        playAudio(letter + ".mp3", () => {
-            learnedLetters.add(letter);
-            updateProgress();
-            saveProgress();
-            
-            const cards = document.querySelectorAll('.learning-card');
-            cards.forEach(card => {
-                if (card.querySelector('.card-letter')?.textContent === letter) {
-                    card.classList.add('learned');
-                    showCelebration('🎉');
-                }
-            });
-        });
+    const numbersDiv = document.getElementById("numbers");
+    for (let i = 1; i <= 100; i++) {
+      const card = document.createElement("div");
+      card.className = "learning-card";
+      if (learnedNumbers.has(i)) card.classList.add("learned");
+      card.innerHTML = `<div class="card-number">${i}</div>`;
+      card.onclick = () => playNumber(i);
+      numbersDiv.appendChild(card);
     }
+  }
 
-    function playNumber(number) {
-        playAudio(number + ".mp3", () => {
-            learnedNumbers.add(number);
-            updateProgress();
-            saveProgress();
-            
-            const cards = document.querySelectorAll('.learning-card');
-            cards.forEach(card => {
-                if (card.querySelector('.card-number')?.textContent == number) {
-                    card.classList.add('learned');
-                    showCelebration('⭐');
-                }
-            });
-        });
-    }window.onload = () => {
-        loadProgress();
+  // === Quiz (sessiz) ===
+  const quizWords = ["Apple","Banana","Cat","Dog","Fish"];
+  let quizIndex = 0;
 
-        // Harfleri oluştur
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        const lettersDiv = document.getElementById("letters");
-        letters.forEach(l => {
-            const div = document.createElement("div");
-            div.className = "learning-card";
-            div.innerHTML = `<div class="card-letter">${l}</div>`;
-            div.onclick = () => playLetter(l);
-            lettersDiv.appendChild(div);
-        });
+  function startQuiz() {
+    quizIndex = 0;
+    askQuestion();
+  }
 
-        // Sayıları oluştur
-        const numbers = [1,2,3,4,5,6,7,8,9,10];
-        const numbersDiv = document.getElementById("numbers");
-        numbers.forEach(n => {
-            const div = document.createElement("div");
-            div.className = "learning-card";
-            div.innerHTML = `<div class="card-number">${n}</div>`;
-            div.onclick = () => playNumber(n);
-            numbersDiv.appendChild(div);
-        });
-    };
-  </script>
+  function askQuestion() {
+    if (quizIndex >= quizWords.length) {
+      document.getElementById("quiz-question").textContent = "Quiz finished!";
+      document.getElementById("quiz-options").innerHTML = "";
+      return;
+    }
+    let word = quizWords[quizIndex];
+    document.getElementById("quiz-question").textContent = `Which one is "${word}"?`;
+
+    let options = [...quizWords].sort(() => 0.5 - Math.random()).slice(0,3);
+    if (!options.includes(word)) options[0] = word;
+    const div = document.getElementById("quiz-options");
+    div.innerHTML = "";
+    options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.onclick = () => {
+        if (opt === word) {
+          showCelebration("✅ Correct!");
+        } else {
+          showCelebration("❌ Wrong!");
+        }
+        quizIndex++;
+        setTimeout(askQuestion, 1000);
+      };
+      div.appendChild(btn);
+    });
+  }
+
+  // === Kutlama ===
+  function showCelebration(symbol) {
+    const div = document.getElementById("celebration");
+    div.textContent = symbol;
+    setTimeout(() => div.textContent = "", 1500);
+  }
+
+  // === Başlat ===
+  loadProgress();
+  createCards();
+  updateProgress();
+</script>
 </body>
 </html>
