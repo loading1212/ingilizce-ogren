@@ -30,504 +30,80 @@
             --shadow: 0 10px 30px rgba(108, 92, 231, 0.1 );
             --shadow-hover: 0 20px 40px rgba(108, 92, 231, 0.2);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: var(--dark-color);
             overflow-x: hidden;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-
-        .app-container {
-            max-width: 430px;
-            margin: 0 auto;
-            background: var(--white);
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 20px;
-            color: var(--white);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .app-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .app-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-
-        .progress-container {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.3);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, var(--success-color), var(--warning-color));
-            height: 100%;
-            width: 0%;
-            border-radius: 4px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .progress-text {
-            font-size: 12px;
-            text-align: center;
-            opacity: 0.9;
-        }
-
-        /* Navigation */
-        .nav-tabs {
-            display: flex;
-            background: var(--white);
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 16px 8px;
-            text-align: center;
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-600);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-tab.active {
-            color: var(--primary-color);
-        }
-
-        .nav-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        .nav-tab i {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        /* Content Sections */
-        .content-section {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .learning-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .learning-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .learning-card:hover::before {
-            left: 100%;
-        }
-
-        .learning-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-color);
-        }
-
-        .learning-card.learned {
-            background: linear-gradient(135deg, #e8f5e8, #d4edda);
-            border-color: var(--success-color);
-        }
-
-        .learning-card.learned::after {
-            content: '✓';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            background: var(--success-color);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .card-letter {
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 12px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 8px;
-        }
-
-        .card-word {
-            font-size: 14px;
-            color: var(--gray-600);
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, var(--success-color), #00A085);
-            color: var(--white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
-        }
-
-        /* Range Selector */
-        .range-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .range-btn {
-            background: var(--gray-100);
-            color: var(--gray-700);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 60px;
-        }
-
-        .range-btn:hover {
-            background: var(--gray-200);
-        }
-
-        .range-btn.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--white);
-        }
-
-        /* Quiz Section */
-        .quiz-container {
-            text-align: center;
-        }
-
-        .quiz-question {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 24px;
-            padding: 20px;
-            background: var(--gray-100);
-            border-radius: var(--border-radius);
-        }
-
-        .quiz-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .quiz-option {
-            background: var(--white);
-            border: 2px solid var(--gray-300);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .quiz-option:hover {
-            border-color: var(--primary-color);
-            transform: scale(1.02);
-        }
-
-        .quiz-option.correct {
-            border-color: var(--success-color);
-            background: #e8f5e8;
-            color: var(--success-color);
-        }
-
-        .quiz-option.wrong {
-            border-color: var(--danger-color);
-            background: #ffebee;
-            color: var(--danger-color);
-        }
-
-        .next-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--white);
-            border: none;
-            padding: 16px 32px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: none;
-        }
-
-        .next-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--accent-color), #E84393);
-            border: none;
-            border-radius: 50%;
-            color: var(--white);
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(253, 121, 168, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 30px rgba(253, 121, 168, 0.4);
-        }
-
-        /* Sound Indicator */
-        .sound-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 184, 148, 0.9);
-            color: var(--white);
-            padding: 12px 16px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 1000;
-            display: none;
-            animation: pulse 1s infinite;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 64px;
-            z-index: 1000;
-            animation: celebration 2s ease-out forwards;
-            pointer-events: none;
-        }
-
-        @keyframes celebration {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            .app-container {
-                max-width: 100%;
-            }
-            
-            .cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 12px;
-            }
-            
-            .learning-card {
-                padding: 16px;
-            }
-            
-            .card-letter {
-                font-size: 36px;
-            }
-            
-            .card-number {
-                font-size: 28px;
-            }
-        }
+        .app-container { max-width: 430px; margin: 0 auto; background: var(--white); min-height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0, 0, 0, 0.1); }
+        .header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); padding: 20px; color: var(--white); position: relative; overflow: hidden; }
+        .header-content { position: relative; z-index: 2; }
+        .app-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .app-subtitle { font-size: 14px; opacity: 0.9; font-weight: 400; }
+        .progress-container { margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 15px; backdrop-filter: blur(10px); }
+        .progress-bar { background: rgba(255, 255, 255, 0.3); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+        .progress-fill { background: linear-gradient(90deg, var(--success-color), var(--warning-color)); height: 100%; width: 0%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-text { font-size: 12px; text-align: center; opacity: 0.9; }
+        .nav-tabs { display: flex; background: var(--white); border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; z-index: 10; }
+        .nav-tab { flex: 1; padding: 16px 8px; text-align: center; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--gray-600); cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .nav-tab.active { color: var(--primary-color); }
+        .nav-tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 30px; height: 3px; background: var(--primary-color); border-radius: 2px; }
+        .nav-tab i { display: block; font-size: 18px; margin-bottom: 4px; }
+        .content-section { display: none; padding: 20px; animation: fadeIn 0.5s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 20px; }
+        .learning-card { background: var(--white); border-radius: var(--border-radius); padding: 20px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; position: relative; overflow: hidden; }
+        .learning-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-hover); border-color: var(--primary-color); }
+        .learning-card.learned { background: linear-gradient(135deg, #e8f5e8, #d4edda); border-color: var(--success-color); }
+        .learning-card.learned::after { content: '✓'; position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; background: var(--success-color); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .card-letter { font-size: 48px; font-weight: 700; color: var(--primary-color); margin-bottom: 12px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
+        .card-number { font-size: 36px; font-weight: 700; color: var(--accent-color); margin-bottom: 8px; }
+        .card-word { font-size: 14px; color: var(--gray-600); font-weight: 500; margin-bottom: 12px; }
+        .play-btn { background: linear-gradient(135deg, var(--success-color), #00A085); color: var(--white); border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; }
+        .play-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3); }
+        .range-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .range-btn { background: var(--gray-100); color: var(--gray-700); border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; flex: 1; min-width: 60px; }
+        .range-btn.active { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--white); }
+        .quiz-container { text-align: center; }
+        .quiz-question { font-size: 20px; font-weight: 600; color: var(--dark-color); margin-bottom: 24px; padding: 20px; background: var(--gray-100); border-radius: var(--border-radius); }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .quiz-option { background: var(--white); border: 2px solid var(--gray-300); border-radius: var(--border-radius); padding: 16px; cursor: pointer; transition: all 0.3s ease; font-size: 16px; font-weight: 500; }
+        .quiz-option:hover { border-color: var(--primary-color); transform: scale(1.02); }
+        .quiz-option.correct { border-color: var(--success-color); background: #e8f5e8; color: var(--success-color); }
+        .quiz-option.wrong { border-color: var(--danger-color); background: #ffebee; color: var(--danger-color); }
+        .next-btn { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--white); border: none; padding: 16px 32px; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: none; }
+        .fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-color), #E84393); border: none; border-radius: 50%; color: var(--white); font-size: 24px; cursor: pointer; box-shadow: 0 8px 20px rgba(253, 121, 168, 0.3); transition: all 0.3s ease; z-index: 1000; }
+        .sound-indicator { position: fixed; top: 20px; right: 20px; background: rgba(0, 184, 148, 0.9); color: var(--white); padding: 12px 16px; border-radius: 25px; font-size: 14px; font-weight: 500; z-index: 1000; display: none; animation: pulse 1s infinite; backdrop-filter: blur(10px); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .celebration { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 64px; z-index: 1000; animation: celebration 2s ease-out forwards; pointer-events: none; }
+        @keyframes celebration { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <div class="header">
             <div class="header-content">
-                <h1 class="app-title">
-                    <i class="fas fa-graduation-cap"></i>
-                    English Kids
-                </h1>
+                <h1 class="app-title"><i class="fas fa-graduation-cap"></i> English Kids</h1>
                 <p class="app-subtitle">İngilizce öğrenmenin eğlenceli yolu</p>
-                
                 <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgress"></div>
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="overallProgress"></div></div>
                     <div class="progress-text" id="progressText">Öğrenmeye başla! 🚀</div>
                 </div>
             </div>
         </div>
-
-        <!-- Navigation -->
         <div class="nav-tabs">
-            <button class="nav-tab active" data-target="alphabet">
-                <i class="fas fa-font"></i>
-                Alfabe
-            </button>
-            <button class="nav-tab" data-target="numbers">
-                <i class="fas fa-hashtag"></i>
-                Sayılar
-            </button>
-            <button class="nav-tab" data-target="quiz">
-                <i class="fas fa-brain"></i>
-                Quiz
-            </button>
+            <button class="nav-tab active" onclick="showSection('alphabet')"><i class="fas fa-font"></i> Alfabe</button>
+            <button class="nav-tab" onclick="showSection('numbers')"><i class="fas fa-hashtag"></i> Sayılar</button>
+            <button class="nav-tab" onclick="showSection('quiz')"><i class="fas fa-brain"></i> Quiz</button>
         </div>
-
-        <!-- Alphabet Section -->
-        <div id="alphabet" class="content-section active">
-            <div class="cards-grid" id="alphabetGrid"></div>
-        </div>
-
-        <!-- Numbers Section -->
+        <div id="alphabet" class="content-section active"><div class="cards-grid" id="alphabetGrid"></div></div>
         <div id="numbers" class="content-section">
             <div class="range-selector">
                 <button class="range-btn active" onclick="showNumberRange(1, 20, this)">1-20</button>
@@ -538,319 +114,256 @@
             </div>
             <div class="cards-grid" id="numbersGrid"></div>
         </div>
-
-        <!-- Quiz Section -->
         <div id="quiz" class="content-section">
             <div class="quiz-container">
                 <div id="quizContent">
                     <div class="quiz-question" id="quizQuestion">Quiz başlatılıyor...</div>
                     <div class="quiz-options" id="quizOptions"></div>
-                    <button class="next-btn" onclick="nextQuestion()" id="nextBtn">
-                        Sonraki Soru <i class="fas fa-arrow-right"></i>
-                    </button>
+                    <button class="next-btn" onclick="nextQuestion()" id="nextBtn">Sonraki Soru <i class="fas fa-arrow-right"></i></button>
                 </div>
                 <div id="quizResults" style="display: none;">
                     <h3>🎉 Tebrikler!</h3>
                     <p id="finalScore"></p>
-                    <button class="next-btn" onclick="restartQuiz()" style="display: inline-block;">
-                        <i class="fas fa-redo"></i> Tekrar Oyna
-                    </button>
+                    <button class="next-btn" onclick="restartQuiz()" style="display: inline-block;"><i class="fas fa-redo"></i> Tekrar Oyna</button>
                 </div>
             </div>
         </div>
-
-        <!-- Floating Action Button -->
-        <button class="fab" onclick="toggleSound()">
-            <i class="fas fa-volume-up" id="soundIcon"></i>
-        </button>
-
-        <!-- Sound Indicator -->
-        <div class="sound-indicator" id="soundIndicator">
-            <i class="fas fa-volume-up"></i> Ses çalıyor...
-        </div>
+        <button class="fab" onclick="toggleSound()"><i class="fas fa-volume-up" id="soundIcon"></i></button>
+        <div class="sound-indicator" id="soundIndicator"><i class="fas fa-volume-up"></i> Ses çalıyor...</div>
     </div>
 
     <script>
-        // App State
-        let currentSection = 'alphabet';
         let learnedLetters = new Set();
         let learnedNumbers = new Set();
         let quizScore = 0;
-        let totalQuizScore = 0;
         let currentQuizQuestion = 0;
         let quizQuestions = [];
-        let studyStartTime = Date.now();
         let currentNumberRange = { start: 1, end: 20 };
         let soundEnabled = true;
 
-        // Data
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const numbers = Array.from({length: 100}, (_, i) => i + 1);
-        const numberWords = [
-            'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
-            'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty',
-            'Twenty-one', 'Twenty-two', 'Twenty-three', 'Twenty-four', 'Twenty-five', 'Twenty-six', 'Twenty-seven', 'Twenty-eight', 'Twenty-nine', 'Thirty',
-            'Thirty-one', 'Thirty-two', 'Thirty-three', 'Thirty-four', 'Thirty-five', 'Thirty-six', 'Thirty-seven', 'Thirty-eight', 'Thirty-nine', 'Forty',
-            'Forty-one', 'Forty-two', 'Forty-three', 'Forty-four', 'Forty-five', 'Forty-six', 'Forty-seven', 'Forty-eight', 'Forty-nine', 'Fifty',
-            'Fifty-one', 'Fifty-two', 'Fifty-three', 'Fifty-four', 'Fifty-five', 'Fifty-six', 'Fifty-seven', 'Fifty-eight', 'Fifty-nine', 'Sixty',
-            'Sixty-one', 'Sixty-two', 'Sixty-three', 'Sixty-four', 'Sixty-five', 'Sixty-six', 'Sixty-seven', 'Sixty-eight', 'Sixty-nine', 'Seventy',
-            'Seventy-one', 'Seventy-two', 'Seventy-three', 'Seventy-four', 'Seventy-five', 'Seventy-six', 'Seventy-seven', 'Seventy-eight', 'Seventy-nine', 'Eighty',
-            'Eighty-one', 'Eighty-two', 'Eighty-three', 'Eighty-four', 'Eighty-five', 'Eighty-six', 'Eighty-seven', 'Eighty-eight', 'Eighty-nine', 'Ninety',
-            'Ninety-one', 'Ninety-two', 'Ninety-three', 'Ninety-four', 'Ninety-five', 'Ninety-six', 'Ninety-seven', 'Ninety-eight', 'Ninety-nine', 'One hundred'
-        ];
+        const numberWords = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty-one', 'Twenty-two', 'Twenty-three', 'Twenty-four', 'Twenty-five', 'Twenty-six', 'Twenty-seven', 'Twenty-eight', 'Twenty-nine', 'Thirty', 'Thirty-one', 'Thirty-two', 'Thirty-three', 'Thirty-four', 'Thirty-five', 'Thirty-six', 'Thirty-seven', 'Thirty-eight', 'Thirty-nine', 'Forty', 'Forty-one', 'Forty-two', 'Forty-three', 'Forty-four', 'Forty-five', 'Forty-six', 'Forty-seven', 'Forty-eight', 'Forty-nine', 'Fifty', 'Fifty-one', 'Fifty-two', 'Fifty-three', 'Fifty-four', 'Fifty-five', 'Fifty-six', 'Fifty-seven', 'Fifty-eight', 'Fifty-nine', 'Sixty', 'Sixty-one', 'Sixty-two', 'Sixty-three', 'Sixty-four', 'Sixty-five', 'Sixty-six', 'Sixty-seven', 'Sixty-eight', 'Sixty-nine', 'Seventy', 'Seventy-one', 'Seventy-two', 'Seventy-three', 'Seventy-four', 'Seventy-five', 'Seventy-six', 'Seventy-seven', 'Seventy-eight', 'Seventy-nine', 'Eighty', 'Eighty-one', 'Eighty-two', 'Eighty-three', 'Eighty-four', 'Eighty-five', 'Eighty-six', 'Eighty-seven', 'Eighty-eight', 'Eighty-nine', 'Ninety', 'Ninety-one', 'Ninety-two', 'Ninety-three', 'Ninety-four', 'Ninety-five', 'Ninety-six', 'Ninety-seven', 'Ninety-eight', 'Ninety-nine', 'One hundred'];
 
-        // Sound System
-        function playSound(text, callback) {
+        function playSound(fileName, callback) {
             if (!soundEnabled) {
                 if (callback) callback();
                 return;
             }
-
-            const indicator = document.getElementById('soundIndicator');
-            indicator.style.display = 'block';
-
             const audio = new Audio();
-            let fileName = '';
-
-            // Letters
-            if (text.length === 1 && text.match(/[A-Z]/i)) {
-                fileName = `${text.toLowerCase()}.mp3`;
-            } 
-            // Numbers
-            else if (!isNaN(text)) {
-                const number = parseInt(text);
-                if (number >= 1 && number <= 100) {
-                    fileName = `en_num_${number.toString().padStart(2, '0')}.mp3`;
-                }
-            }
-            // Number words for quiz
-            else {
-                const index = numberWords.indexOf(text);
-                if (index !== -1) {
-                    fileName = `en_num_${(index + 1).toString().padStart(2, '0')}.mp3`;
-                }
-            }
-
-            if (fileName) {
-                audio.src = `https://archive.org/download/ingilizce-sesler-projesi/${fileName}`;
-                audio.onended = ( ) => {
-                    indicator.style.display = 'none';
-                    if (callback) callback();
-                };
-                audio.onerror = (e) => {
-                    console.error('Audio error:', e);
-                    indicator.style.display = 'none';
-                    if (callback) callback();
-                };
-                audio.play().catch(e => {
-                    console.error('Audio play error:', e);
-                    indicator.style.display = 'none';
-                    if (callback) callback();
-                });
-            } else {
+            audio.src = `https://archive.org/download/ingilizce-sesler-projesi/${fileName}`;
+            const indicator = document.getElementById('soundIndicator' );
+            indicator.style.display = 'block';
+            audio.onended = () => {
                 indicator.style.display = 'none';
                 if (callback) callback();
-            }
+            };
+            audio.onerror = (e) => {
+                indicator.style.display = 'none';
+                console.error('Ses yüklenirken hata oluştu:', e);
+                if (callback) callback();
+            };
+            audio.play().catch(e => console.error("Ses çalma hatası:", e));
         }
 
         function toggleSound() {
             soundEnabled = !soundEnabled;
-            const icon = document.getElementById('soundIcon');
-            icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+            document.getElementById('soundIcon').className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
         }
 
-        // Navigation
         function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Remove active from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show target section
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(sectionName).classList.add('active');
-            document.querySelector(`[data-target="${sectionName}"]`).classList.add('active');
-            
-            currentSection = sectionName;
-            
-            // Load content
-            if (sectionName === 'alphabet') {
-                loadLetters();
-            } else if (sectionName === 'numbers') {
-                loadNumbers();
-            } else if (sectionName === 'quiz') {
-                initQuiz();
-            }
-            
-            updateProgress();
+            document.querySelector(`button[onclick="showSection('${sectionName}')"]`).classList.add('active');
+            if (sectionName === 'alphabet') loadLetters();
+            else if (sectionName === 'numbers') loadNumbers();
+            else if (sectionName === 'quiz') initQuiz();
         }
 
-        // Load Letters
         function loadLetters() {
             const grid = document.getElementById('alphabetGrid');
-            grid.innerHTML = '';
-            
-            letters.forEach(letter => {
-                const card = document.createElement('div');
-                card.className = `learning-card ${learnedLetters.has(letter) ? 'learned' : ''}`;
-                card.innerHTML = `
+            grid.innerHTML = letters.map(letter => `
+                <div class="learning-card ${learnedLetters.has(letter) ? 'learned' : ''}" id="card-letter-${letter}">
                     <div class="card-letter">${letter}</div>
                     <div class="card-word">${letter}</div>
-                    <button class="play-btn" onclick="event.stopPropagation(); playLetter('${letter}')">
-                        <i class="fas fa-play"></i> Dinle
-                    </button>
-                `;
-                grid.appendChild(card);
-            });
+                    <button class="play-btn" onclick="event.stopPropagation(); playLetter('${letter}')"><i class="fas fa-play"></i> Dinle</button>
+                </div>`).join('');
         }
 
-        // Load Numbers
         function loadNumbers() {
             const grid = document.getElementById('numbersGrid');
             grid.innerHTML = '';
-            
-            const { start, end } = currentNumberRange;
-            
-            for (let i = start; i <= end; i++) {
-                const card = document.createElement('div');
-                card.className = `learning-card ${learnedNumbers.has(i) ? 'learned' : ''}`;
-                card.innerHTML = `
-                    <div class="card-number">${i}</div>
-                    <div class="card-word">${numberWords[i-1]}</div>
-                    <button class="play-btn" onclick="event.stopPropagation(); playNumber(${i})">
-                        <i class="fas fa-play"></i> Dinle
-                    </button>
-                `;
-                grid.appendChild(card);
+            for (let i = currentNumberRange.start; i <= currentNumberRange.end; i++) {
+                grid.innerHTML += `
+                    <div class="learning-card ${learnedNumbers.has(i) ? 'learned' : ''}" id="card-number-${i}">
+                        <div class="card-number">${i}</div>
+                        <div class="card-word">${numberWords[i-1]}</div>
+                        <button class="play-btn" onclick="event.stopPropagation(); playNumber(${i})"><i class="fas fa-play"></i> Dinle</button>
+                    </div>`;
             }
         }
 
-        // Number Range
         function showNumberRange(start, end, button) {
-            document.querySelectorAll('.range-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.range-btn').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-            
             currentNumberRange = { start, end };
             loadNumbers();
         }
 
-        // Play Letter
         function playLetter(letter) {
-            playSound(letter, () => {
-                learnedLetters.add(letter);
-                updateProgress();
-                saveProgress();
-                
-                // Update card
-                const cards = document.querySelectorAll('#alphabetGrid .learning-card');
-                cards.forEach(card => {
-                    if (card.querySelector('.card-letter')?.textContent === letter) {
-                        card.classList.add('learned');
-                        showCelebration('🎉');
-                    }
-                });
+            const fileName = `${letter.toLowerCase()}.mp3`;
+            playSound(fileName, () => {
+                if (!learnedLetters.has(letter)) {
+                    learnedLetters.add(letter);
+                    updateProgress();
+                    saveProgress();
+                    document.getElementById(`card-letter-${letter}`).classList.add('learned');
+                    showCelebration('🎉');
+                }
             });
         }
 
-        // Play Number
         function playNumber(number) {
-            playSound(number.toString(), () => {
-                learnedNumbers.add(number);
-                updateProgress();
-                saveProgress();
-                
-                // Update card
-                const cards = document.querySelectorAll('#numbersGrid .learning-card');
-                cards.forEach(card => {
-                    if (card.querySelector('.card-number')?.textContent == number) {
-                        card.classList.add('learned');
-                        showCelebration('⭐');
-                    }
-                });
+            const fileName = `en_num_${String(number).padStart(2, '0')}.mp3`;
+            playSound(fileName, () => {
+                if (!learnedNumbers.has(number)) {
+                    learnedNumbers.add(number);
+                    updateProgress();
+                    saveProgress();
+                    document.getElementById(`card-number-${number}`).classList.add('learned');
+                    showCelebration('⭐');
+                }
             });
         }
 
-        // Update Progress
         function updateProgress() {
-            const totalItems = letters.length + numbers.length;
+            const totalItems = letters.length + 100; // 100 sayıyı varsayıyoruz
             const learnedItems = learnedLetters.size + learnedNumbers.size;
-            const progressPercentage = (learnedItems / totalItems) * 100;
-            
-            const progressFill = document.getElementById('overallProgress');
-            const progressText = document.getElementById('progressText');
-            
-            progressFill.style.width = progressPercentage + '%';
-            progressText.textContent = `${learnedItems}/${totalItems} öğrenildi (${Math.round(progressPercentage)}%)`;
+            const progressPercentage = totalItems > 0 ? (learnedItems / totalItems) * 100 : 0;
+            document.getElementById('overallProgress').style.width = progressPercentage + '%';
+            document.getElementById('progressText').textContent = `${learnedItems}/${totalItems} öğrenildi (${Math.round(progressPercentage)}%)`;
         }
 
-        // Celebration
         function showCelebration(emoji) {
             const celebration = document.createElement('div');
             celebration.className = 'celebration';
             celebration.textContent = emoji;
             document.body.appendChild(celebration);
-            
-            setTimeout(() => {
-                document.body.removeChild(celebration);
-            }, 2000);
+            setTimeout(() => document.body.removeChild(celebration), 2000);
         }
 
-        // Quiz Functions
         function initQuiz() {
-            currentQuizQuestion = 0;
             quizScore = 0;
             quizQuestions = generateQuizQuestions();
-            
             document.getElementById('quizContent').style.display = 'block';
             document.getElementById('quizResults').style.display = 'none';
-            
             showQuestion();
         }
 
         function generateQuizQuestions() {
             const questions = [];
-            
-            // Letter questions
-            for (let i = 0; i < 5; i++) {
-                const correctLetter = letters[Math.floor(Math.random() * letters.length)];
-                const wrongOptions = [];
-                
-                while (wrongOptions.length < 3) {
-                    const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-                    if (randomLetter !== correctLetter && !wrongOptions.includes(randomLetter)) {
-                        wrongOptions.push(randomLetter);
+            const allLearnable = [...letters.map(l => ({ type: 'letter', value: l })), ...Array.from({ length: 100 }, (_, i) => ({ type: 'number', value: i + 1 }))];
+
+            for (let i = 0; i < 10; i++) {
+                const correctItem = allLearnable[Math.floor(Math.random() * allLearnable.length)];
+                let options = [correctItem.type === 'letter' ? correctItem.value : numberWords[correctItem.value - 1]];
+
+                while (options.length < 4) {
+                    const randomItem = allLearnable[Math.floor(Math.random() * allLearnable.length)];
+                    const optionText = randomItem.type === 'letter' ? randomItem.value : numberWords[randomItem.value - 1];
+                    if (!options.includes(optionText)) {
+                        options.push(optionText);
                     }
                 }
-                
-                const options = [correctLetter, ...wrongOptions].sort(() => Math.random() - 0.5);
-                
+
                 questions.push({
-                    type: 'letter',
-                    question: `Hangi harf "${correctLetter}" harfidir?`,
-                    options: options,
-                    correct: correctLetter,
-                    audio: correctLetter
+                    question: `Dinlediğiniz hangisidir?`,
+                    options: options.sort(() => Math.random() - 0.5),
+                    correct: correctItem.type === 'letter' ? correctItem.value : numberWords[correctItem.value - 1],
+                    audioFileName: correctItem.type === 'letter' ? `${correctItem.value.toLowerCase()}.mp3` : `en_num_${String(correctItem.value).padStart(2, '0')}.mp3`
                 });
             }
-            
-            // Number questions
-            for (let i = 0; i < 5; i++) {
-                const correctNumber = Math.floor(Math.random() * 20) + 1;
-                const wrongOptions = [];
-                
-                while (wrongOptions.length < 3) {
-                    const randomNumber = Math.floor(Math.random() * 20) + 1;
-                    if (randomNumber !== correctNumber && !wrongOptions.includes(randomNumber)) {
-                        wrongOptions.push(randomNumber);
-                    }
+            return questions;
+        }
+
+        function showQuestion() {
+            if (currentQuizQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+            const question = quizQuestions[currentQuizQuestion];
+            document.getElementById('quizQuestion').textContent = question.question;
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            playSound(question.audioFileName);
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(option, question.correct);
+                optionsContainer.appendChild(optionElement);
+            });
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectAnswer(selected, correct) {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.onclick = null;
+                if (option.textContent == correct) option.classList.add('correct');
+                else if (option.textContent == selected) option.classList.add('wrong');
+            });
+            if (selected == correct) {
+                quizScore += 10;
+                showCelebration('👍');
+            }
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuizQuestion++;
+            showQuestion();
+        }
+
+
+        function showQuizResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            document.getElementById('finalScore').textContent = `${quizScore}/100 puan aldın! 🎊`;
+            saveProgress();
+        }
+
+        function restartQuiz() {
+            currentQuizQuestion = 0;
+            initQuiz();
+        }
+
+        function saveProgress() {
+            try {
+                const progress = {
+                    learnedLetters: Array.from(learnedLetters),
+                    learnedNumbers: Array.from(learnedNumbers)
+                };
+                localStorage.setItem('englishKidsProgress', JSON.stringify(progress));
+            } catch (e) { console.error("localStorage kullanılamıyor:", e); }
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('englishKidsProgress');
+                if (saved) {
+                    const progress = JSON.parse(saved);
+                    learnedLetters = new Set(progress.learnedLetters || []);
+                    learnedNumbers = new Set(progress.learnedNumbers || []);
                 }
-                
-                const options = [correctNumber, ...wrongOptions].sort(() => Math.random() - 0.5);
-                
-                questions.
+            } catch (e) { console.error("localStorage kullanılamıyor:", e); }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            showSection('alphabet');
+            updateProgress();
+        });
+        window.addEventListener('beforeunload', saveProgress);
+    </script>
+</body>
+</html>
