@@ -27,7 +27,7 @@
             --gray-800: #343A40;
             --gray-900: #212529;
             --border-radius: 16px;
-            --shadow: 0 10px 30px rgba(108, 92, 231, 0.1);
+            --shadow: 0 10px 30px rgba(108, 92, 231, 0.1 );
             --shadow-hover: 0 20px 40px rgba(108, 92, 231, 0.2);
         }
 
@@ -484,21 +484,6 @@
                 font-size: 28px;
             }
         }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: var(--white);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -621,7 +606,6 @@
                 return;
             }
 
-            console.log('Playing sound:', text);
             const indicator = document.getElementById('soundIndicator');
             indicator.style.display = 'block';
 
@@ -649,7 +633,7 @@
 
             if (fileName) {
                 audio.src = `https://archive.org/download/ingilizce-sesler-projesi/${fileName}`;
-                audio.onended = () => {
+                audio.onended = ( ) => {
                     indicator.style.display = 'none';
                     if (callback) callback();
                 };
@@ -716,7 +700,7 @@
                 card.innerHTML = `
                     <div class="card-letter">${letter}</div>
                     <div class="card-word">${letter}</div>
-                    <button class="play-btn" onclick="playLetter('${letter}')">
+                    <button class="play-btn" onclick="event.stopPropagation(); playLetter('${letter}')">
                         <i class="fas fa-play"></i> Dinle
                     </button>
                 `;
@@ -737,7 +721,7 @@
                 card.innerHTML = `
                     <div class="card-number">${i}</div>
                     <div class="card-word">${numberWords[i-1]}</div>
-                    <button class="play-btn" onclick="playNumber(${i})">
+                    <button class="play-btn" onclick="event.stopPropagation(); playNumber(${i})">
                         <i class="fas fa-play"></i> Dinle
                     </button>
                 `;
@@ -764,7 +748,7 @@
                 saveProgress();
                 
                 // Update card
-                const cards = document.querySelectorAll('.learning-card');
+                const cards = document.querySelectorAll('#alphabetGrid .learning-card');
                 cards.forEach(card => {
                     if (card.querySelector('.card-letter')?.textContent === letter) {
                         card.classList.add('learned');
@@ -782,7 +766,7 @@
                 saveProgress();
                 
                 // Update card
-                const cards = document.querySelectorAll('.learning-card');
+                const cards = document.querySelectorAll('#numbersGrid .learning-card');
                 cards.forEach(card => {
                     if (card.querySelector('.card-number')?.textContent == number) {
                         card.classList.add('learned');
@@ -869,135 +853,4 @@
                 
                 const options = [correctNumber, ...wrongOptions].sort(() => Math.random() - 0.5);
                 
-                questions.push({
-                    type: 'number',
-                    question: `Hangi sayı "${numberWords[correctNumber-1]}" kelimesini temsil eder?`,
-                    options: options,
-                    correct: correctNumber,
-                    audio: numberWords[correctNumber-1]
-                });
-            }
-            
-            return questions.sort(() => Math.random() - 0.5);
-        }
-
-        function showQuestion() {
-            if (currentQuizQuestion >= quizQuestions.length) {
-                showQuizResults();
-                return;
-            }
-            
-            const question = quizQuestions[currentQuizQuestion];
-            document.getElementById('quizQuestion').textContent = question.question;
-            
-            const optionsContainer = document.getElementById('quizOptions');
-            optionsContainer.innerHTML = '';
-            
-            // Play sound
-            playSound(question.audio);
-            
-            question.options.forEach(option => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'quiz-option';
-                optionElement.textContent = option;
-                optionElement.onclick = () => selectAnswer(option, question.correct);
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            document.getElementById('nextBtn').style.display = 'none';
-        }
-
-        function selectAnswer(selected, correct) {
-            const options = document.querySelectorAll('.quiz-option');
-            options.forEach(option => {
-                option.onclick = null;
-                
-                if (option.textContent == correct) {
-                    option.classList.add('correct');
-                } else if (option.textContent == selected && selected != correct) {
-                    option.classList.add('wrong');
-                }
-            });
-            
-            if (selected == correct) {
-                quizScore += 10;
-                showCelebration('🎉');
-            }
-            
-            document.getElementById('nextBtn').style.display = 'inline-block';
-        }
-
-        function nextQuestion() {
-            currentQuizQuestion++;
-            showQuestion();
-        }
-
-        function showQuizResults() {
-            totalQuizScore += quizScore;
-            
-            document.getElementById('quizContent').style.display = 'none';
-            document.getElementById('quizResults').style.display = 'block';
-            
-            const scoreText = `${quizScore}/100 puan aldın! 🎊`;
-            document.getElementById('finalScore').textContent = scoreText;
-            
-            updateProgress();
-            saveProgress();
-        }
-
-        function restartQuiz() {
-            initQuiz();
-        }
-
-        // Storage
-        function saveProgress() {
-            const progress = {
-                learnedLetters: Array.from(learnedLetters),
-                learnedNumbers: Array.from(learnedNumbers),
-                totalQuizScore: totalQuizScore,
-                studyStartTime: studyStartTime
-            };
-            
-            localStorage.setItem('englishKidsProgress', JSON.stringify(progress));
-        }
-
-        function loadProgress() {
-            const saved = localStorage.getItem('englishKidsProgress');
-            if (saved) {
-                const progress = JSON.parse(saved);
-                learnedLetters = new Set(progress.learnedLetters || []);
-                learnedNumbers = new Set(progress.learnedNumbers || []);
-                totalQuizScore = progress.totalQuizScore || 0;
-                studyStartTime = progress.studyStartTime || Date.now();
-            }
-        }
-
-        // Event Listeners
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.getAttribute('data-target');
-                showSection(target);
-            });
-        });
-
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('English Kids App başlatılıyor...');
-            
-            loadProgress();
-            loadLetters();
-            updateProgress();
-            
-            // Welcome message
-            setTimeout(() => {
-                if (soundEnabled) {
-                    // playSound('Welcome to English Kids!');
-                }
-            }, 1000);
-        });
-
-        // Save progress before page unload
-        window.addEventListener('beforeunload', saveProgress);
-    </script>
-</body>
-</html>
+                questions.
