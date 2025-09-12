@@ -699,21 +699,21 @@
 
         const vocabulary = {
             colors: [
-                { word: 'Red', turkish: 'Kırmızı', audio: 'red' },
-                { word: 'Blue', turkish: 'Mavi', audio: 'blue' },
-                { word: 'Green', turkish: 'Yeşil', audio: 'green' },
+                { word: 'Red', turkish: 'Kırmızı', audio: '' },
+                { word: 'Blue', turkish: 'Mavi', audio: '' },
+                { word: 'Green', turkish: 'Yeşil', audio: '' },
             ],
             animals: [
-                { word: 'Cat', turkish: 'Kedi', audio: 'cat' },
-                { word: 'Dog', turkish: 'Köpek', audio: 'dog' },
+                { word: 'Cat', turkish: 'Kedi', audio: '' },
+                { word: 'Dog', turkish: 'Köpek', audio: '' },
             ],
             fruits: [
-                { word: 'Apple', turkish: 'Elma', audio: 'apple' },
-                { word: 'Banana', turkish: 'Muz', audio: 'banana' },
+                { word: 'Apple', turkish: 'Elma', audio: '' },
+                { word: 'Banana', turkish: 'Muz', audio: '' },
             ],
             family: [
-                { word: 'Mother', turkish: 'Anne', audio: 'mother' },
-                { word: 'Father', turkish: 'Baba', audio: 'father' },
+                { word: 'Mother', turkish: 'Anne', audio: '' },
+                { word: 'Father', turkish: 'Baba', audio: '' },
             ]
         };
 
@@ -737,7 +737,8 @@
         // Ses oynatma fonksiyonu
         function playSound(audioName, callback) {
             console.log('Ses çalınıyor:', audioName);
-            const audioPath = `https://raw.githubusercontent.com/kullanıcı/repo/main/sesler/${audioName}.mp3`; // BURAYI KENDİ GITHUB URL'NİZLE DEĞİŞTİRİN
+            const audioPath = `https://raw.githubusercontent.com/loading1212/ingilizce-ogren2/main/sesler/${audioName}.mp3`;
+            console.log('Ses URL:', audioPath);
             const audio = new Audio(audioPath);
             audio.volume = document.getElementById('volumeSlider').value;
             audio.muted = isMuted;
@@ -746,19 +747,23 @@
 
             audio.addEventListener('canplaythrough', () => {
                 audio.play().then(() => {
-                    console.log('Ses çalma tamamlandı.');
+                    console.log('Ses çalma tamamlandı:', audioName);
                 }).catch(e => {
-                    console.error('Ses çalma hatası:', e);
+                    console.error('Ses çalma hatası:', audioName, e);
+                    if (e.name === 'NotAllowedError') {
+                        alert('Ses oynatma izni reddedildi. Lütfen cihazınızda ses oynatmaya izin verin.');
+                    }
                 });
             });
 
             audio.addEventListener('ended', () => {
                 indicator.style.display = 'none';
+                console.log('Ses bitti:', audioName);
                 if (callback) callback();
             });
 
             audio.addEventListener('error', (e) => {
-                console.error('Ses dosyası yükleme hatası:', e);
+                console.error('Ses dosyası yükleme hatası:', audioName, e);
                 indicator.style.display = 'none';
                 if (callback) callback();
             });
@@ -826,7 +831,7 @@
                     <button class="play-btn" onclick="playNumber(${i})">🔊 Dinle</button>
                 `;
                 grid.appendChild(card);
-            }
+            });
         }
 
         // Kelimeleri yükle
@@ -896,14 +901,19 @@
 
         // Kelime sesini çal
         function playWord(audioName, word) {
-            playSound(audioName, () => {
-                learnedWords.add(word);
-                dailyWordsLearned += 1;
-                updateProgress();
-                saveProgress();
-                loadVocabulary();
-                showCelebration('📖');
-            });
+            if (audioName && audioName !== '') {
+                playSound(audioName, () => {
+                    learnedWords.add(word);
+                    dailyWordsLearned += 1;
+                    updateProgress();
+                    saveProgress();
+                    loadVocabulary();
+                    showCelebration('📖');
+                });
+            } else {
+                console.log(`Ses dosyası bulunamadı: ${audioName}, heceleme yapılıyor: ${word}`);
+                spellWord(word);
+            }
         }
 
         // Kelimeyi hecele
@@ -1072,7 +1082,7 @@
                     question: `"${correctWord.turkish}" kelimesi İngilizce'de nedir?`,
                     options: options,
                     correct: correctWord.word,
-                    audio: correctWord.audio
+                    audio: correctWord.audio || ''
                 });
             }
             return questions.sort(() => Math.random() - 0.5);
@@ -1088,7 +1098,9 @@
             document.getElementById('quizQuestion').textContent = question.question;
             const optionsContainer = document.getElementById('quizOptions');
             optionsContainer.innerHTML = '';
-            playSound(question.audio);
+            if (question.audio) {
+                playSound(question.audio);
+            }
             question.options.forEach(option => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'quiz-option';
@@ -1141,7 +1153,6 @@
 
         // İstatistikleri güncelle
         function updateStats() {
-            // Günlük sıfırlama kontrolü
             const today = new Date().toDateString();
             if (today !== lastResetDate) {
                 dailyWordsLearned = 0;
