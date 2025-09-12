@@ -20,7 +20,6 @@
             align-items: center;
             padding: 20px;
             overflow-x: hidden;
-            touch-action: manipulation;
         }
 
         .container {
@@ -42,7 +41,6 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
-            position: relative;
         }
 
         .header h1 {
@@ -105,9 +103,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
-            position: relative;
-            overflow: hidden;
-            touch-action: manipulation;
         }
 
         .nav-btn:hover {
@@ -163,7 +158,6 @@
             position: relative;
             overflow: hidden;
             border: 3px solid transparent;
-            touch-action: manipulation;
         }
 
         .learning-card:hover {
@@ -187,7 +181,6 @@
             color: #4A90E2;
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
         }
 
         .card-number {
@@ -215,7 +208,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-            touch-action: manipulation;
             margin: 5px;
         }
 
@@ -297,7 +289,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
-            touch-action: manipulation;
         }
 
         .start-learning-btn:hover {
@@ -355,7 +346,6 @@
             transition: all 0.3s ease;
             font-size: 1.2rem;
             font-weight: bold;
-            touch-action: manipulation;
         }
 
         .quiz-option:hover {
@@ -390,7 +380,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            touch-action: manipulation;
         }
 
         .range-btn:hover {
@@ -719,16 +708,19 @@
 
         // Ses kontrolü
         function toggleMute() {
+            console.log('Ses durumu değişiyor:', isMuted);
             isMuted = !isMuted;
             const muteBtn = document.getElementById('muteBtn');
             muteBtn.textContent = isMuted ? '🔇 Ses Kapalı' : '🔊 Ses Açık';
             document.querySelectorAll('audio').forEach(audio => {
                 audio.muted = isMuted;
             });
+            console.log('Yeni ses durumu:', isMuted);
         }
 
         function updateVolume() {
             const volume = document.getElementById('volumeSlider').value;
+            console.log('Ses seviyesi değişti:', volume);
             document.querySelectorAll('audio').forEach(audio => {
                 audio.volume = volume;
             });
@@ -781,8 +773,14 @@
             const targetSection = document.getElementById(sectionName);
             if (targetSection) {
                 targetSection.classList.add('active');
+            } else {
+                console.error('Bölüm bulunamadı:', sectionName);
             }
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                console.warn('Event nesnesi yok, manuel aktifleştirme gerekiyor.');
+            }
             currentSection = sectionName;
 
             if (sectionName === 'letters') {
@@ -803,7 +801,12 @@
 
         // Harfleri yükle
         function loadLetters() {
+            console.log('Harfler yükleniyor...');
             const grid = document.getElementById('lettersGrid');
+            if (!grid) {
+                console.error('lettersGrid elementi bulunamadı!');
+                return;
+            }
             grid.innerHTML = '';
             letters.forEach(letter => {
                 const card = document.createElement('div');
@@ -819,7 +822,12 @@
 
         // Sayıları yükle
         function loadNumbers() {
+            console.log('Sayılar yükleniyor...');
             const grid = document.getElementById('numbersGrid');
+            if (!grid) {
+                console.error('numbersGrid elementi bulunamadı!');
+                return;
+            }
             grid.innerHTML = '';
             const { start, end } = currentNumberRange;
             for (let i = start; i <= end; i++) {
@@ -831,12 +839,17 @@
                     <button class="play-btn" onclick="playNumber(${i})">🔊 Dinle</button>
                 `;
                 grid.appendChild(card);
-            });
+            }
         }
 
         // Kelimeleri yükle
         function loadVocabulary() {
+            console.log('Kelimeler yükleniyor...');
             const grid = document.getElementById('vocabularyGrid');
+            if (!grid) {
+                console.error('vocabularyGrid elementi bulunamadı!');
+                return;
+            }
             grid.innerHTML = '';
             vocabulary[currentCategory].forEach(item => {
                 const card = document.createElement('div');
@@ -852,6 +865,7 @@
 
         // Kategori değiştir
         function showVocabularyCategory(category, button) {
+            console.log('Kategori değişiyor:', category);
             document.querySelectorAll('.range-btn').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             currentCategory = category;
@@ -860,6 +874,7 @@
 
         // Sayı aralığını değiştir
         function showNumberRange(start, end, button) {
+            console.log('Sayı aralığı değişiyor:', start, '-', end);
             document.querySelectorAll('.range-btn').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             currentNumberRange = { start, end };
@@ -868,6 +883,7 @@
 
         // Harf sesini çal
         function playLetter(letter) {
+            console.log('Harf çalınıyor:', letter);
             playSound(letter.toLowerCase(), () => {
                 learnedLetters.add(letter);
                 updateProgress();
@@ -884,6 +900,7 @@
 
         // Sayı sesini çal
         function playNumber(number) {
+            console.log('Sayı çalınıyor:', number);
             const audioName = `en_num_${String(number).padStart(2, '0')}`;
             playSound(audioName, () => {
                 learnedNumbers.add(number);
@@ -901,6 +918,7 @@
 
         // Kelime sesini çal
         function playWord(audioName, word) {
+            console.log('Kelime çalınıyor:', word, 'audio:', audioName);
             if (audioName && audioName !== '') {
                 playSound(audioName, () => {
                     learnedWords.add(word);
@@ -918,6 +936,7 @@
 
         // Kelimeyi hecele
         function spellWord(word) {
+            console.log('Kelime heceleniyor:', word);
             const letters = word.toUpperCase().split('');
             let index = 0;
             function playNext() {
@@ -933,6 +952,7 @@
 
         // Alfabe şarkısı
         function playAlphabetSong() {
+            console.log('Alfabe şarkısı çalınıyor...');
             const songLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
             let index = 0;
             function playNext() {
@@ -950,6 +970,7 @@
 
         // Sayı oyunu
         function playNumberGame() {
+            console.log('Sayı oyunu çalınıyor...');
             const numbersToCount = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             let index = 0;
             function playNext() {
@@ -975,15 +996,9 @@
             const progressText = document.getElementById('progressText');
             const levelText = document.getElementById('levelText');
 
-            if (progressFill) {
-                progressFill.style.width = progressPercentage + '%';
-            }
-            if (progressText) {
-                progressText.textContent = `${learnedItems}/${totalItems} öğrenildi (${Math.round(progressPercentage)}%)`;
-            }
-            if (levelText) {
-                levelText.textContent = `Seviye ${level}`;
-            }
+            if (progressFill) progressFill.style.width = progressPercentage + '%';
+            if (progressText) progressText.textContent = `${learnedItems}/${totalItems} öğrenildi (${Math.round(progressPercentage)}%)`;
+            if (levelText) levelText.textContent = `Seviye ${level}`;
 
             updateBadges();
         }
@@ -1016,6 +1031,7 @@
 
         // Quiz başlat
         function initQuiz() {
+            console.log('Quiz başlatılıyor...');
             currentQuizQuestion = 0;
             quizScore = 0;
             quizQuestions = generateQuizQuestions();
@@ -1027,63 +1043,36 @@
         // Quiz soruları oluştur
         function generateQuizQuestions() {
             const questions = [];
-            // Harf soruları
             for (let i = 0; i < 5; i++) {
                 const correctLetter = letters[Math.floor(Math.random() * letters.length)];
                 const wrongOptions = [];
                 while (wrongOptions.length < 3) {
                     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-                    if (randomLetter !== correctLetter && !wrongOptions.includes(randomLetter)) {
-                        wrongOptions.push(randomLetter);
-                    }
+                    if (randomLetter !== correctLetter && !wrongOptions.includes(randomLetter)) wrongOptions.push(randomLetter);
                 }
                 const options = [correctLetter, ...wrongOptions].sort(() => Math.random() - 0.5);
-                questions.push({
-                    type: 'letter',
-                    question: `Hangi harf "${correctLetter}" harfidir?`,
-                    options: options,
-                    correct: correctLetter,
-                    audio: correctLetter.toLowerCase()
-                });
+                questions.push({ type: 'letter', question: `Hangi harf "${correctLetter}" harfidir?`, options, correct: correctLetter, audio: correctLetter.toLowerCase() });
             }
-            // Sayı soruları
             for (let i = 0; i < 5; i++) {
                 const correctNumber = Math.floor(Math.random() * 20) + 1;
                 const wrongOptions = [];
                 while (wrongOptions.length < 3) {
                     const randomNumber = Math.floor(Math.random() * 20) + 1;
-                    if (randomNumber !== correctNumber && !wrongOptions.includes(randomNumber)) {
-                        wrongOptions.push(randomNumber);
-                    }
+                    if (randomNumber !== correctNumber && !wrongOptions.includes(randomNumber)) wrongOptions.push(randomNumber);
                 }
                 const options = [correctNumber, ...wrongOptions].sort(() => Math.random() - 0.5);
-                questions.push({
-                    type: 'number',
-                    question: `Hangi sayı "${numberWords[correctNumber-1]}" kelimesini temsil eder?`,
-                    options: options,
-                    correct: correctNumber,
-                    audio: `en_num_${String(correctNumber).padStart(2, '0')}`
-                });
+                questions.push({ type: 'number', question: `Hangi sayı "${numberWords[correctNumber-1]}" kelimesini temsil eder?`, options, correct: correctNumber, audio: `en_num_${String(correctNumber).padStart(2, '0')}` });
             }
-            // Kelime soruları
             const allWords = Object.values(vocabulary).flat();
             for (let i = 0; i < 5; i++) {
                 const correctWord = allWords[Math.floor(Math.random() * allWords.length)];
                 const wrongOptions = [];
                 while (wrongOptions.length < 3) {
                     const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-                    if (randomWord.word !== correctWord.word && !wrongOptions.includes(randomWord.word)) {
-                        wrongOptions.push(randomWord.word);
-                    }
+                    if (randomWord.word !== correctWord.word && !wrongOptions.includes(randomWord.word)) wrongOptions.push(randomWord.word);
                 }
                 const options = [correctWord.word, ...wrongOptions].sort(() => Math.random() - 0.5);
-                questions.push({
-                    type: 'word',
-                    question: `"${correctWord.turkish}" kelimesi İngilizce'de nedir?`,
-                    options: options,
-                    correct: correctWord.word,
-                    audio: correctWord.audio || ''
-                });
+                questions.push({ type: 'word', question: `"${correctWord.turkish}" kelimesi İngilizce'de nedir?`, options, correct: correctWord.word, audio: correctWord.audio || '' });
             }
             return questions.sort(() => Math.random() - 0.5);
         }
@@ -1098,9 +1087,7 @@
             document.getElementById('quizQuestion').textContent = question.question;
             const optionsContainer = document.getElementById('quizOptions');
             optionsContainer.innerHTML = '';
-            if (question.audio) {
-                playSound(question.audio);
-            }
+            if (question.audio) playSound(question.audio);
             question.options.forEach(option => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'quiz-option';
@@ -1116,11 +1103,8 @@
             const options = document.querySelectorAll('.quiz-option');
             options.forEach(option => {
                 option.onclick = null;
-                if (option.textContent == correct) {
-                    option.classList.add('correct');
-                } else if (option.textContent == selected && selected != correct) {
-                    option.classList.add('wrong');
-                }
+                if (option.textContent == correct) option.classList.add('correct');
+                else if (option.textContent == selected && selected != correct) option.classList.add('wrong');
             });
             if (selected == correct) {
                 quizScore += 10;
@@ -1140,8 +1124,7 @@
             totalQuizScore += quizScore;
             document.getElementById('quizContent').style.display = 'none';
             document.getElementById('quizResults').style.display = 'block';
-            const scoreText = `${quizScore}/150 puan aldın! 🎊`;
-            document.getElementById('finalScore').textContent = scoreText;
+            document.getElementById('finalScore').textContent = `${quizScore}/150 puan aldın! 🎊`;
             updateProgress();
             saveProgress();
         }
@@ -1158,7 +1141,6 @@
                 dailyWordsLearned = 0;
                 lastResetDate = today;
             }
-
             document.getElementById('learnedLettersCount').textContent = learnedLetters.size;
             document.getElementById('learnedNumbersCount').textContent = learnedNumbers.size;
             document.getElementById('learnedWordsCount').textContent = learnedWords.size;
@@ -1166,7 +1148,6 @@
             document.getElementById('dailyWords').textContent = dailyWordsLearned;
             const studyMinutes = Math.floor((Date.now() - studyStartTime) / 60000);
             document.getElementById('studyTime').textContent = studyMinutes;
-
             const achievementsList = document.getElementById('achievementsList');
             const achievements = [];
             if (learnedLetters.size >= 26) achievements.push('🔤 Tüm harfleri öğrendim!');
@@ -1175,7 +1156,6 @@
             if (totalQuizScore >= 100) achievements.push('🏆 Quiz ustası oldum!');
             if (studyMinutes >= 30) achievements.push('⏰ 30 dakika çalıştım!');
             if (dailyWordsLearned >= 5) achievements.push('🌟 Günlük 5 kelime hedefi tamamlandı!');
-
             achievementsList.innerHTML = achievements.length > 0 
                 ? achievements.map(achievement => `<p>${achievement}</p>`).join('')
                 : '<p>Henüz başarı kazanmadın. Öğrenmeye devam et! 💪</p>';
@@ -1217,6 +1197,14 @@
             loadLetters();
             updateProgress();
             document.getElementById('volumeSlider').addEventListener('input', updateVolume);
+
+            // Butonlara ek event listener'lar
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    console.log('Nav butonuna tıklandı:', e.target.textContent);
+                    showSection(e.target.getAttribute('onclick').replace('showSection(', '').replace(')', ''));
+                });
+            });
         });
 
         // Sayfa kapatılırken kaydet
